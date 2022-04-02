@@ -7,4 +7,4 @@ I have used `PyCharm` IDE for development however you use any IDE which support 
 For testing `APIs`, I have used `Postman` tool, [click here to download Postman for windows](https://www.postman.com/downloads/)
 
 **List of Projects**
-* Basic/Simple Flask App
+* Simple Flask App
