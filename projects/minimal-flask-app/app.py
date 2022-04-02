@@ -43,8 +43,8 @@ def perform_computation(val1, val2, operation):
 
 # create route with GET, POST method
 # ********************************************************
-# request url: http://localhost:9000/compute
 # for using GET
+# request url: http://localhost:9000/compute
 # set request type: GET
 # ********************************************************
 # request url: http://localhost:9000/compute
