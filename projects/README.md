@@ -8,3 +8,4 @@ For testing `APIs`, I have used `Postman` tool, [click here to download Postman 
 
 **List of Projects**
 * Simple Flask App
+* Minimal Flask App
