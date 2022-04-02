@@ -2,7 +2,7 @@
 
 
 ## Projects Tech Stack Info
-* Flask:  `Micro Web Framework` for creating APIs in Python.
+* **Flask:**  `Micro Web Framework` for creating APIs in Python.
 
 
 #### What does `Micro` mean?
