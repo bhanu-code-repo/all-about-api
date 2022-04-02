@@ -4,7 +4,7 @@
 clone/download project and open folder in terminal and then run command `python .\app.py`
 
 ## About Project
-Minimal Flask App with `GET` and `POST` routes to perfrom basic mathematical operatons i.e. addition, subtraction, multiplication and division for two numbers passed inside request body
+Minimal Flask App with `GET` and `POST` routes to perform basic mathematical operatons i.e. addition, subtraction, multiplication and division for two numbers passed inside request body
 
 For `GET` request,
 * Request URL: http://localhost:9000/compute
