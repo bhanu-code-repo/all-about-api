@@ -55,7 +55,7 @@ def perform_computation(val1, val2, operation):
 # ********************************************************
 @app.route('/compute', methods=['GET', 'POST'])
 def compute():
-    # handle all GET request
+    # handle all GET requests
     if request.method == 'GET':
         return jsonify('supported operations: add, subtract, divide, multiply')
 
