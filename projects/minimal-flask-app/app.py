@@ -50,7 +50,7 @@ def perform_computation(val1, val2, operation):
 # request url: http://localhost:9000/compute
 # set request type: POST
 # set request header Content-Type as application/json
-# request body: {"num1": 5, "num2": 5,"operation": "multiply"}
+# request body: {"num1": 5, "num2": 5, "operation": "multiply"}
 # note: "operation" values can be one out of add, subtract, divide, multiply
 # ********************************************************
 @app.route('/compute', methods=['GET', 'POST'])
