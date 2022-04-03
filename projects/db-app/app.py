@@ -1,16 +1,18 @@
 # importing required packages
-import os, utils
+import os, utils, pymongo
 from flask import Flask, request, jsonify
 import mysql.connector as conn
 
 # create app - object of Flask class
 app = Flask(__name__)
 
+
 @app.route('/configure-db', methods=['POST'])
 def configure_db():
     if utils.check_content_type(request):
-        request_body = {k.lower(): v.lower() for (k, v) in request.json.items()}
-        if utils.validate_request_body(['username', 'password'], request_body.keys()):
+        request_body = {k.lower(): v.lower() for (k, v) in request.json.items() if k.lower() != 'conn-str'}
+        request_body['conn-str'] = request.json['conn-str']
+        if utils.validate_request_body(['username', 'password', 'conn-str'], request_body.keys()):
             utils.write_json_file('config.json', request_body)
             return jsonify({'status': 'db configured successfully'})
         else:
@@ -27,8 +29,11 @@ def get_db():
             my_db = conn.connect(host='localhost', user=str(app_config['username']), passwd=str(app_config['password']))
             cursor = my_db.cursor()
 
+            # create mongodb client
+            client = pymongo.MongoClient(app_config['conn-str'])
+
             # process request
-            status, result = utils.process_get_dbs_request(request, cursor)
+            status, result = utils.process_get_dbs_request(request, cursor, client)
             if status:
                 return jsonify({'existing dbs': result})
             else:
@@ -77,10 +82,13 @@ def create_db():
                                      passwd=str(app_config['password']))
                 cursor = my_db.cursor()
 
+                # create mongodb client
+                client = pymongo.MongoClient(str(app_config['conn-str']))
+
                 # process request
-                status, result = utils.process_create_db_request(request, cursor)
+                status, result = utils.process_create_db_request(request, cursor, client)
                 if status:
-                    jsonify({'db status': result})
+                    return jsonify({'db status': result})
                 else:
                     return jsonify({'error': result})
             except conn.Error as err:
@@ -105,8 +113,13 @@ def get_db_data():
                                      passwd=str(app_config['password']))
                 cursor = my_db.cursor()
 
+                # create mongodb client
+                client = pymongo.MongoClient(str(app_config['conn-str']))
+                db = client.BPST
+                collection = db['my_collection']
+
                 # process request
-                status, result = utils.process_get_db_data(request, cursor)
+                status, result = utils.process_get_db_data(request, cursor, collection)
                 if status:
                     return jsonify({'data': str(result)})
                 else:

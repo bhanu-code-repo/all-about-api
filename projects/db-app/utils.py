@@ -1,11 +1,6 @@
 # importing required packages
-import os, json, enum
-import mysql.connector as conn
+import json, pymongo
 
-
-# class ConfigFile(enum.Enum):
-#     FileExits = 1
-#     FileNotFound = 2
 
 def check_content_type(request):
     status = False
@@ -28,15 +23,6 @@ def write_json_file(filename, data):
         outfile.write(json_object)
 
 
-# def get_sql_db_connection():
-#     if 'config.json' in os.listdir('.'):
-#         print(read_json_file('config.json'))
-#         app_config = read_json_file('config.json')
-#         return conn.connect(host='localhost', user=app_config['username'], passwd=app_config['password'])
-#     else:
-#         return ConfigFile.FileNotFound
-
-
 def validate_request_body(required_keys, actual_keys):
     status = True
     for key in required_keys:
@@ -45,7 +31,7 @@ def validate_request_body(required_keys, actual_keys):
     return status
 
 
-def process_get_dbs_request(request, cursor):
+def process_get_dbs_request(request, cursor, client):
     status = False
     args_dict = {k.lower(): v.lower() for (k, v) in request.args.to_dict().items()}
     if len(args_dict.items()) == 1:
@@ -55,8 +41,13 @@ def process_get_dbs_request(request, cursor):
                 cursor.execute('show databases')
                 return status, str([db_name for db_name, in cursor.fetchall()])
             elif args_dict['type'] == 'mongodb':
-                status = True
-                return status, 'to do'
+                try:
+                    status = True
+                    result = client.list_database_names()
+                    return status, result
+                except Exception as err:
+                    status = False
+                    return status, str(err)
             else:
                 return status, 'invalid db type'
         else:
@@ -86,7 +77,7 @@ def process_get_db_request(request, cursor):
         return status, 'invalid request'
 
 
-def process_create_db_request(request, cursor):
+def process_create_db_request(request, cursor, client):
     status = False
     if check_content_type(request):
         request_body = {k.lower(): v.lower() for (k, v) in request.json.items()}
@@ -97,7 +88,8 @@ def process_create_db_request(request, cursor):
                 return status, f'{request_body["name"]} db created successfully'
             elif request_body['type'] == 'mongodb':
                 status = True
-                return status, 'to do'
+                db = client[request_body['name']]
+                return status, f'{db.name} db created successfully'
             else:
                 return status, 'invalid db type'
         else:
@@ -106,18 +98,20 @@ def process_create_db_request(request, cursor):
         return status, 'Content-Type not supported!'
 
 
-def process_get_db_data(request, cursor):
+# {"name": "fsds_course", "type": "SQL", "query": "SELECT * FROM FSDS_COURSE.STUDENTS"}
+def process_get_db_data(request, cursor, collection):
     status = False
     if check_content_type(request):
         request_body = {k.lower(): v.lower() for (k, v) in request.json.items()}
-        if validate_request_body(['name', 'type', 'query'], request_body.keys()):
+        if validate_request_body(['name', 'type'], request_body.keys()):
             if request_body['type'] == 'sql':
-                status = True
-                cursor.execute(request_body['query'])
-                return status, cursor.fetchall()
+                if validate_request_body(['query'], request_body.keys()):
+                    status = True
+                    cursor.execute(request_body['query'])
+                    return status, cursor.fetchall()
             elif request_body['type'] == 'mongodb':
                 status = True
-                return status, 'to do'
+                return status, [data for data in collection.find()]
             else:
                 return status, 'invalid db type'
         else:
