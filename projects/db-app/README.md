@@ -12,7 +12,7 @@ Flask based application to access data from MySQL and MongoDB.
    * Request Body: {"username": "your username", "password": "your password", "conn-str": "your connection string"}
    * Request Type: POST
 2. Get Database Data
-   * Request URL: http://localhost:9000/get-db-data
+   * Request URL: http://localhost:port/get-db-data
    * For SQL
      * Request Body: {"name": "fsds_course", "type": "SQL", "query": "SELECT * FROM FSDS_COURSE.STUDENTS"}
    * For MongoDB
