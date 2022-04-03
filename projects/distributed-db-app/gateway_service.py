@@ -32,7 +32,7 @@ def make_POST_request(port, service, payload):
 def handle_app_requests():
     # handle all GET requests
     if request.method == 'GET':
-        return ''
+        return jsonify({'supported functions': 'get data', 'supported DB': 'MySQL, MongoDB'})
 
     # handle all POST requests
     if request.method == 'POST':
