@@ -26,7 +26,7 @@ def get_data():
         db = client[request_body['db-name']]
         collection = db[request_body['collection']]
         return jsonify({'data': str(list(collection.find()))})
-    return jsonify({'error': 'connection-string not found'})
+    return jsonify({'error': 'db-name or collection or connection-string not found'})
 
 
 # run flask app
