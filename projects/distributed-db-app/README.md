@@ -13,7 +13,7 @@ Project to fetch data from MySQl & MongoDB.
 * Set `Content-Type` to `application/json` in request header
 * Request body: `{"username": "", "password": "", "query": "SELECT * FROM FSDS_COURSE.STUDENTS", "type": "SQL"}`
 
-#### Access Data from MongoDB Database
+#### Access Data from MongoDB
 * Request URL: http://localhost:9000/db-app
 * Request Type: POST
 * Set `Content-Type` to `application/json` in request header
