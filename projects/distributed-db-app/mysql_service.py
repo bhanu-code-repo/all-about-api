@@ -17,7 +17,7 @@ def get_data():
                              passwd=str(request_body['password']))
         cursor = my_db.cursor()
 
-        # get data
+        # get data from database
         if 'query' in request_body.keys():
             cursor.execute(request_body['query'])
             return jsonify({'data': str(cursor.fetchall())})
